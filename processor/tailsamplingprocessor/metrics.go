@@ -41,6 +41,7 @@ var (
 	statDroppedTooEarlyCount    = stats.Int64("sampling_trace_dropped_too_early", "Count of traces that needed to be dropped the configured wait time", stats.UnitDimensionless)
 	statNewTraceIDReceivedCount = stats.Int64("new_trace_id_received", "Counts the arrival of new traces", stats.UnitDimensionless)
 	statTracesOnMemoryGauge     = stats.Int64("sampling_traces_on_memory", "Tracks the number of traces current on memory", stats.UnitDimensionless)
+	statMatchPolicySampled      = stats.Int64("sampling_match_policy", "match policy of trace decision", stats.UnitDimensionless)
 )
 
 // SamplingProcessorMetricViews return the metrics views according to given telemetry level.

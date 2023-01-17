@@ -201,6 +201,12 @@ func (tsp *tailSamplingSpanProcessor) samplingPolicyOnTick() {
 		statPolicyEvaluationErrorCount.M(metrics.evaluateErrorCount),
 		statTracesOnMemoryGauge.M(int64(tsp.numTracesOnMap.Load())))
 
+	_ = stats.RecordWithTags(
+		tsp.ctx,
+		[]tag.Mutator{tag.Upsert(tagPolicyKey, "matchpolicy")},
+		statMatchPolicySampled.M(int64(1)),
+	)
+
 	tsp.logger.Debug("Sampling policy evaluation completed",
 		zap.Int("batch.len", batchLen),
 		zap.Int64("sampled", metrics.decisionSampled),
@@ -280,6 +286,12 @@ func (tsp *tailSamplingSpanProcessor) makeDecision(id pcommon.TraceID, trace *sa
 				statCountTracesSampled.M(int64(1)),
 			)
 			metrics.decisionSampled++
+
+			_ = stats.RecordWithTags(
+				p.ctx,
+				[]tag.Mutator{tag.Upsert(tagPolicyKey, matchingPolicy.name)},
+				statMatchPolicySampled.M(int64(1)),
+			)
 
 		case sampling.NotSampled:
 			_ = stats.RecordWithTags(
